@@ -1,6 +1,10 @@
-// Polyfill for 'window.global' to fix compatibility issues in some environments (e.g., Vite + STOMP.js)
+// ✅ Polyfill: Required to avoid 'global is not defined' error with STOMP.js in Vite
 window.global = window;
 
+// ✅ Import the WebSocket endpoint from environment variable (.env.local)
+const endpoint = import.meta.env.VITE_BACKEND_WS_URL;
+
+// ----------------- Imports -----------------
 import React, { useRef, useState } from 'react';
 import Player from './Components/Player';
 import Home from './Components/Home';
@@ -9,88 +13,100 @@ import { Client } from '@stomp/stompjs';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+// ----------------- App Component -----------------
 function App() {
 
-  // Local state for YouTube video ID and slider-seeking status
-  const [videoId, setVideoId] = useState("");
-  const [isSeeking, setIsSeeking] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
+  // ---------- Local State ----------
+  const [videoId, setVideoId] = useState("");     // YouTube video ID to be played
+  const [isSeeking, setIsSeeking] = useState(false); // Tracks slider activity
+  const [isConnected, setIsConnected] = useState(false); // Tracks STOMP connection
 
-  // Refs to hold mutable values across renders
-  const room = useRef(null);                     // Stores current room name
-  const stompClient = useRef(null);             // STOMP client instance
-  const dis = useRef(true);                     // Flag to control sync behavior
-  const playerRef = useRef();                   // Ref to access Player component's methods
-  
-  // Function to connect to WebSocket server using STOMP over SockJS
+  // ---------- Refs (used to persist values without causing re-renders) ----------
+  const room = useRef(null);            // Stores current room name
+  const stompClient = useRef(null);     // STOMP client instance
+  const dis = useRef(true);             // Flag to disable sync temporarily (for URL updates)
+  const playerRef = useRef();           // Reference to Player component (for calling its functions)
+
+  // ---------- Connect to WebSocket (via SockJS + STOMP) ----------
   const connect = (RoomName) => {
     room.current = RoomName;
-    localStorage.setItem('roomName', RoomName);
+    localStorage.setItem('roomName', RoomName); // Persist room for reloads
 
-    const socket = new SockJS("http://192.168.1.15:9090/server"); // Backend WebSocket endpoint
+    const socket = new SockJS(endpoint); // Create SockJS client with backend WebSocket URL
 
-    // Create new STOMP client and configure lifecycle methods
+    // Setup STOMP client
     stompClient.current = new Client({
-      webSocketFactory: () => socket,
+      webSocketFactory: () => socket, // Use SockJS as transport
 
       onConnect: () => {
         setIsConnected(true);
-        // Subscribe to messages from the current room
+
+        // Subscribe to topic specific to the room
         stompClient.current.subscribe("/topic/return/" + RoomName, (obj) => {
-          showResponse(JSON.parse(obj.body));       // Handle received message
+          const payload = JSON.parse(obj.body);
+          showResponse(payload); // Handle incoming WebSocket messages
         });
       },
 
       onStompError: (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
+        console.error('❌ STOMP Error:', frame.headers['message']);
+        console.error('Details:', frame.body);
       }
     });
 
-    stompClient.current.activate(); // Connect WebSocket
+    stompClient.current.activate(); // 🔌 Initiate WebSocket connection
   };
 
-  // Function to handle different types of WebSocket messages
+  // ---------- Handle WebSocket Messages ----------
   const showResponse = (obj) => {
-
     if (obj.type === "url") {
-      dis.current = true;                                // Prevent duplicate URL updates
-      localStorage.setItem('url', String(obj.value));    // Save URL locally
-      setVideoId(obj.value);                             // Update YouTube video ID
+      // 🔁 URL sync event (e.g., when video is loaded in one tab and synced in others)
+      dis.current = true;
+      localStorage.setItem('url', String(obj.value));
+      setVideoId(obj.value);
       dis.current = false;
-    }
-
-    else if (obj.type === "p") {
+    } else if (obj.type === "p") {
+      // ▶️⏸ Play/Pause sync
       if (playerRef.current) {
-        playerRef.current.Play_Pause();                  // Trigger play/pause
+        playerRef.current.Play_Pause();
+      }
+    } else if (obj.type === 'slider') {
+      // ⏩ Slider/Seek sync
+      if (playerRef.current) {
+        playerRef.current.onChangeSlider(obj.value);
       }
     }
-
-    else if (obj.type === 'slider') {
-      if (playerRef.current)
-        playerRef.current.onChangeSlider(obj.value);     // Seek to new time
-    }
   };
 
-  // React Router configuration
+  // ---------- Routing ----------
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home connect={connect} />                // Home component with connect callback
+      element: <Home connect={connect} /> // Home screen where users create/join room
     },
     {
-  path: "/video",
-  element: (
-  
-      <Player ref={playerRef} values={{isConnected, connect, setIsSeeking, isSeeking, dis, stompClient, room, videoId, setVideoId }} />
-
-  )
-}
+      path: "/video",
+      element: (
+        <Player
+          ref={playerRef}
+          values={{
+            isConnected,
+            connect,
+            setIsSeeking,
+            isSeeking,
+            dis,
+            stompClient,
+            room,
+            videoId,
+            setVideoId
+          }}
+        />
+      )
+    }
   ]);
 
-  return (
-    <RouterProvider router={router} />
-  );
+  // ---------- Render Router ----------
+  return <RouterProvider router={router} />;
 }
 
 export default App;
