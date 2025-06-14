@@ -32,7 +32,7 @@
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/VibeTogether.git
+git clone https://github.com/Sankalp31patil/VibeTogether.git
 cd VibeTogether
 
 
