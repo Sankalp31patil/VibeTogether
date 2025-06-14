@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+*{
+  padding: 0%;
+  margin: 0%;
+}
+
+.Home{
+  width: 100vw;
+  height: 100vh;
+}
+
+.navbar{
+  height: 7vh;
+  background-color: rgb(59, 58, 58);
+}
+
+.roomFormDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 93vh;
+
+}
+
+img{
+  position: absolute;
+  height: 7vh;
+}
+
+p{
+  font-size: larger;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}
+
+.roomForm{
+  display: flex;
+  height: 250px;
+  flex-direction: column;
+  width: 350px;
+  border: 2px solid rgba(130, 122, 122, 0.785);
+  align-items: center;
+  justify-content: center;
+  background: url('/background.png');
+  background-size: cover; /* cover the entire form */
+  background-position: center;
+  padding: 0;
+  border-radius: 30px;
+}
+
+
+.roomValue{
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  width: 90%;
+  margin: 5px;
+  border: 2px solid rgba(128, 128, 128, 0.478) ;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  padding: 10px;
+  
+}
+
+input:focus {
+  outline: none;
+  border-color: rgba(128, 128, 128, 0.478);
+  box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.478);
+}
+
+input:hover{
+  outline: none;
+  border-color: rgba(128, 128, 128, 0.923);
+}
+
+.roomEnter{
+  border-radius: 5px;
+  border: 2px solid rgba(128, 128, 128, 0.501);
+  width: 30%;
+
+}
+
+.roomEnter:focus {
+  outline: none;
+  border-color: rgba(17, 126, 55, 0.575);
+  box-shadow: 0 0 0 3px rgba(17, 126, 55, 0.575);
+  background-color: rgba(17, 126, 55, 0.575);;
+}
+
+.roomEnter:hover{
+  outline: none;
+  border-color: rgba(128, 128, 128, 0.923);
+}
+
+
+

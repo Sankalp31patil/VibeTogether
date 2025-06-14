@@ -1,0 +1,176 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.Container {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  align-items: center;  
+  height: 100%;         
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.Form-fill {
+  margin: 1.5% 0%;
+  border: 1px solid #c6c6c6;
+  width: 41%;
+  height: 6%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  position: sticky;
+}
+
+.searchBar{
+    border-radius: 100px 0 0 100px;
+    flex: 1;
+    display: flex;
+    height: 100%;
+    padding-left: 15px;
+    border: none;
+}
+
+.searchBar::active{
+  border: none;
+}
+
+.Search-btn {
+  color: rgba(11, 2, 2, 0.59);
+  border-radius: 0 100px 100px 0;
+  display: flex;
+  height: 100%;
+  width: 10%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-left: 1px solid #c6c6c6;
+}
+
+.videoDiv {
+    display: inline-block;
+    position: relative;
+    width: 50%;
+    aspect-ratio: 16/9;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    box-sizing: border-box;
+}
+
+.youtube-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-sizing: border-box;
+}
+
+.videoCover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.controller{
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 60px;
+  z-index: 2;
+  background: transparent;
+}
+
+/* slider */
+
+.btn-pp {
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color:  rgb(255, 255, 255, 0.927);
+    position: absolute;
+    bottom: 1%;
+}  
+
+.btn-pp:hover{
+    color: rgb(255, 255, 255);
+    
+}
+
+.time{
+  position: absolute;
+  bottom: -10px;
+  left: 112px;
+  color: rgb(255, 255, 255, 0.927);;
+  border: none;
+  font-size: 15px;
+  font-weight: lighter
+}
+
+.fullScreen{
+    font-size: 30px;
+    display: flex;
+    color: rgba(255, 255, 255, 0.927);;
+    position: absolute;
+    right: 15px;
+    bottom: 5px;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+}
+
+.fullScreen:hover{
+    color: rgb(255, 255, 255);;
+}
+
+.logout{
+  margin-top: 5px;
+  border: none;
+  border-radius: 20px;
+  background-color: red;
+  width: 100px;
+
+}
+
+.logout:hover{
+  border: 2px solid grey;
+  font-weight: bold;
+  box-shadow: grey;
+}
+
+.roomDiv{
+  display: flex;
+}
+
+.ROOM{
+  margin-right: 3px;
+}
+
+ 
+
+
+
+
+
